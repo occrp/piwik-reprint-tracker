@@ -30,6 +30,11 @@ function track($campaign, $keyword) {
     # PiwikTracker
     $piwik = new PiwikTracker($GLOBALS['config']['idsite']);
 
+    if ($GLOBALS['config']['debug']) {
+        # get old attribution info
+        header('X-Debug-OldAttInfo: is ' . $piwik->getAttributionInfo());
+    }
+    
     # required for setIP()
     $piwik->setTokenAuth($GLOBALS['config']['piwik_token']);
 
@@ -50,6 +55,9 @@ function track($campaign, $keyword) {
     
     # set the tracked URL
     $piwik->setUrl($schema . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']);
+    if ($GLOBALS['config']['debug']) {
+        header('X-Debug-URL: ' . $schema . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI']);
+    }
 
     # referer
     $piwik->setUrlReferrer($_SERVER['HTTP_REFERER']);
