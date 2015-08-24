@@ -22,8 +22,6 @@ require_once('..' . DIRECTORY_SEPARATOR . 'config.php');
 # piwik tracker -- it also has to exist
 require_once('..' . DIRECTORY_SEPARATOR . 'piwik-php-tracker' . DIRECTORY_SEPARATOR . 'PiwikTracker.php');
 
-define("DEBUG", true);
-
 # handle the tracking
 function track($campaign, $keyword) {
     # Piwik URL
@@ -69,7 +67,7 @@ function track($campaign, $keyword) {
             $_SERVER['HTTP_REFERER']
         ));
     $piwik->setAttributionInfo($att);
-    if (defined("DEBUG") and DEBUG) {
+    if ($GLOBALS['config']['debug']) {
         header("X-Debug-Referred: from " . $_SERVER['HTTP_REFERER']);
         header("X-Debug-AttInfo: $att");
     }
@@ -77,7 +75,7 @@ function track($campaign, $keyword) {
     # do track the page view
     if (empty($keyword)) $keyword = 'none';
     $piwik->doTrackPageView("Reprint Tracker for: $campaign (keyword: $keyword)");
-    if (defined("DEBUG") and DEBUG) {
+    if ($GLOBALS['config']['debug']) {
         header('X-Last-Piwik-Call: ' . $piwik::$DEBUG_LAST_REQUESTED_URL);
     }
 }
